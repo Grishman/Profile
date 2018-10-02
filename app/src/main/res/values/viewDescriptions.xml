@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Content descriptions-->
+    <string name="users_picture" translatable="false">user\'s picture</string>
+</resources>

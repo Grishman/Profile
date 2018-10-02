@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.grishman.profiletest.model.CardsResponse
+import com.grishman.profiletest.model.NewType
 import com.grishman.profiletest.model.ProfileResponse
 import com.grishman.profiletest.network.OpenpayService
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -27,7 +28,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
 
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -51,7 +51,14 @@ class MainActivity : AppCompatActivity() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { result -> testText.text = "${result.cards?.size} result found and /\n profile name is ${result.profile?.firstName}" },
+                        { result ->
+                            //fixme wtf
+                            run {
+                                testText.text = "${result.cards?.size} result found and /\n profile name is ${result.profile?.firstName}"
+                                profile_full_name.text = "${result.profile?.firstName} ${result.profile?.lastName}"
+                                profile_location.text = result.profile?.location?.city + result.profile?.location?.country
+                            }
+                        },
                         { error -> Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show() }
                 )
     }

@@ -1,3 +1,6 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="general_content_margin_vertical">16dp</dimen>
+    <!--Profile screen-->
+    <dimen name="profile_top_margin">20dp</dimen>
 </resources>
