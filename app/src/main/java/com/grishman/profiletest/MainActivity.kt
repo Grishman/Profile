@@ -2,13 +2,27 @@ package com.grishman.profiletest
 
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-
+import android.widget.Toast
+import com.grishman.profiletest.model.CardsResponse
+import com.grishman.profiletest.model.ProfileResponse
+import com.grishman.profiletest.network.OpenpayService
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.functions.BiFunction
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity() {
+
+    private var disposable: Disposable? = null
+
+    private val apiService by lazy {
+        OpenpayService.create()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,7 +32,33 @@ class MainActivity : AppCompatActivity() {
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
+            //test
+            beginSearch("")
         }
+    }
+
+    private fun beginSearch(searchString: String) {
+        disposable = apiService.getCards()
+                .zipWith(
+                        apiService.getProfileInfo(),
+                        BiFunction { list: CardsResponse, info: ProfileResponse ->
+                            val resulted = NewType()
+                            resulted.profile = info
+                            resulted.cards = list.cards
+                            return@BiFunction resulted
+                        }
+                )
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        { result -> testText.text = "${result.cards?.size} result found and /\n profile name is ${result.profile?.firstName}" },
+                        { error -> Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show() }
+                )
+    }
+
+    override fun onPause() {
+        super.onPause()
+        disposable?.dispose()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
