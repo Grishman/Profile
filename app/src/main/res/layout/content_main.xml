@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_image_copy"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".MainActivity"
     tools:showIn="@layout/activity_main">
@@ -95,24 +96,34 @@
         app:layout_constraintTop_toBottomOf="@id/profile_full_name"
         tools:text="Melbourne, Australia" />
 
+    <!--Settings icon-->
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/profile_settings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         app:layout_constraintLeft_toLeftOf="@id/guidelineLeft"
         app:layout_constraintTop_toBottomOf="@id/profile_image"
         app:srcCompat="@drawable/ic_settings" />
 
+    <!--Info icon-->
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/profile_mobile_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="16dp"
         app:layout_constraintLeft_toRightOf="@id/profile_settings"
         app:layout_constraintTop_toBottomOf="@id/profile_image"
         app:srcCompat="@drawable/ic_mobile_info" />
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/cards_recycler"
+        app:layout_constraintTop_toBottomOf="@id/profile_settings"
+        app:layout_constraintBottom_toTopOf="@id/logo"
+        android:layout_width="match_parent"
+        android:layout_height="250dp" />
     <!--Logo-->
     <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@id/guidelineBottom"

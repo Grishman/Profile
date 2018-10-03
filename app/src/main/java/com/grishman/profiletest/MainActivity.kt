@@ -10,12 +10,17 @@ import com.grishman.profiletest.model.CardsResponse
 import com.grishman.profiletest.model.NewType
 import com.grishman.profiletest.model.ProfileResponse
 import com.grishman.profiletest.network.OpenpayService
+import com.iravul.swipecardview.SwipeCardModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import android.support.v7.widget.LinearLayoutManager
+import com.iravul.swipecardview.SwipeCardAdapter
+
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,6 +29,8 @@ class MainActivity : AppCompatActivity() {
     private val apiService by lazy {
         OpenpayService.create()
     }
+
+    private var swipeCardModels: List<SwipeCardModel>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,9 +42,29 @@ class MainActivity : AppCompatActivity() {
             //test
             beginSearch("")
         }
+
+        swipeCardModels = ArrayList()
+
+        //dummydata
+        for (i in 0..10) {
+            val swipeCardModel = SwipeCardModel()
+            swipeCardModel.setId("ID-$i")
+            swipeCardModel.setTitle("Product-$i")
+            swipeCardModel.setDescription("ProductDesc-$i")
+            swipeCardModel.setPrice((i * 10).toString() + " Euro")
+            swipeCardModel.setPhotoUrl("https://s-media-cache-ak0.pinimg.com/736x/a3/99/24/a39924a3fcb7266ff7360af8a6ba2e98.jpg")
+            (swipeCardModels as ArrayList<SwipeCardModel>).add(swipeCardModel)
+        }
+
+        val swipeCardAdapter = SwipeCardAdapter(this, swipeCardModels, null)
+        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        val recyclerView = cards_recycler
+        recyclerView.layoutManager = layoutManager
+        recyclerView.adapter = swipeCardAdapter
     }
 
     private fun beginSearch(searchString: String) {
+        //fixme maybe Observables.zip()
         disposable = apiService.getCards()
                 .zipWith(
                         apiService.getProfileInfo(),
