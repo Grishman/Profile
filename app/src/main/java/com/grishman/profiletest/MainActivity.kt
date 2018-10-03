@@ -18,6 +18,8 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import android.support.v7.widget.LinearLayoutManager
+import com.grishman.profiletest.cards.CardItem
+import com.grishman.profiletest.cards.CardPagerAdapter
 import com.iravul.swipecardview.SwipeCardAdapter
 
 
@@ -31,6 +33,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private var swipeCardModels: List<SwipeCardModel>? = null
+
+    private lateinit var cardAdapter: CardPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,8 +63,21 @@ class MainActivity : AppCompatActivity() {
         val swipeCardAdapter = SwipeCardAdapter(this, swipeCardModels, null)
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         val recyclerView = cards_recycler
-        recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = swipeCardAdapter
+        cardAdapter = CardPagerAdapter()
+        cardAdapter.addCardItem(CardItem("https://s3-ap-southeast-2.amazonaws.com/openpay-mobile-test/white.png"))
+        cardAdapter.addCardItem(CardItem("https://s3-ap-southeast-2.amazonaws.com/openpay-mobile-test/black.png"))
+        cardAdapter.addCardItem(CardItem( "https://s3-ap-southeast-2.amazonaws.com/openpay-mobile-test/white.png"))
+        cardAdapter.addCardItem(CardItem ("https://s3-ap-southeast-2.amazonaws.com/openpay-mobile-test/black.png"))
+//        mFragmentCardAdapter = CardFragmentPagerAdapter(supportFragmentManager,
+//                dpToPixels(2, this))
+//
+//        mCardShadowTransformer = ShadowTransformer(mViewPager, cardAdapter)
+//        mFragmentCardShadowTransformer = ShadowTransformer(mViewPager, mFragmentCardAdapter)
+
+        recyclerView.adapter = cardAdapter
+        //recyclerView.setPageTransformer(false, mCardShadowTransformer)
+        recyclerView.currentItem = 1
+        recyclerView.offscreenPageLimit = 3
     }
 
     private fun beginSearch(searchString: String) {
