@@ -1,15 +1,25 @@
 package com.grishman.profiletest
 
+import android.arch.lifecycle.ViewModelProviders
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import com.grishman.profiletest.R.layout.content_main
+import com.grishman.profiletest.cards.CardItem
+import com.grishman.profiletest.cards.CardPagerAdapter
+import com.grishman.profiletest.databinding.ActivityMainBinding
 import com.grishman.profiletest.model.CardsResponse
 import com.grishman.profiletest.model.NewType
 import com.grishman.profiletest.model.ProfileResponse
 import com.grishman.profiletest.network.OpenpayService
+import com.grishman.profiletest.viewmodel.ProfileViewModel
+import com.grishman.profiletest.viewmodel.ProfileViewModelFactory
+import com.iravul.swipecardview.SwipeCardAdapter
 import com.iravul.swipecardview.SwipeCardModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -17,11 +27,6 @@ import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
-import android.support.v7.widget.LinearLayoutManager
-import com.grishman.profiletest.cards.CardItem
-import com.grishman.profiletest.cards.CardPagerAdapter
-import com.iravul.swipecardview.SwipeCardAdapter
-
 
 
 class MainActivity : AppCompatActivity() {
@@ -38,18 +43,30 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        //setContentView(R.layout.activity_main)
 
+
+        //fixme replace with DI framework
+        val factory = ProfileViewModelFactory(apiService)
+        val profileViewModel = ViewModelProviders.of(this, factory)
+                .get(ProfileViewModel::class.java)
+
+        val binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main).apply {
+            //viewmodel = profileViewModel
+            setLifecycleOwner(this@MainActivity)
+            //content.viewmodel=profileViewModel
+        }
+        binding.content.viewmodel = profileViewModel
+        swipeCardModels = ArrayList()
+
+        //dummydata
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
             //test
-            beginSearch("")
+            //beginSearch("")
+            profileViewModel.initLoading()
         }
-
-        swipeCardModels = ArrayList()
-
-        //dummydata
         for (i in 0..10) {
             val swipeCardModel = SwipeCardModel()
             swipeCardModel.setId("ID-$i")
@@ -66,8 +83,8 @@ class MainActivity : AppCompatActivity() {
         cardAdapter = CardPagerAdapter()
         cardAdapter.addCardItem(CardItem("https://s3-ap-southeast-2.amazonaws.com/openpay-mobile-test/white.png"))
         cardAdapter.addCardItem(CardItem("https://s3-ap-southeast-2.amazonaws.com/openpay-mobile-test/black.png"))
-        cardAdapter.addCardItem(CardItem( "https://s3-ap-southeast-2.amazonaws.com/openpay-mobile-test/white.png"))
-        cardAdapter.addCardItem(CardItem ("https://s3-ap-southeast-2.amazonaws.com/openpay-mobile-test/black.png"))
+        cardAdapter.addCardItem(CardItem("https://s3-ap-southeast-2.amazonaws.com/openpay-mobile-test/white.png"))
+        cardAdapter.addCardItem(CardItem("https://s3-ap-southeast-2.amazonaws.com/openpay-mobile-test/black.png"))
 //        mFragmentCardAdapter = CardFragmentPagerAdapter(supportFragmentManager,
 //                dpToPixels(2, this))
 //
@@ -77,7 +94,7 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = cardAdapter
         //recyclerView.setPageTransformer(false, mCardShadowTransformer)
         recyclerView.currentItem = 1
-        recyclerView.pageMargin=45
+        recyclerView.pageMargin = 45
         recyclerView.offscreenPageLimit = 3
     }
 
@@ -87,7 +104,7 @@ class MainActivity : AppCompatActivity() {
                 .zipWith(
                         apiService.getProfileInfo(),
                         BiFunction { list: CardsResponse, info: ProfileResponse ->
-                             NewType().apply{
+                            NewType().apply {
                                 profile = info
                                 cards = list.cards
                             }

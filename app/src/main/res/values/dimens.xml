@@ -1,4 +1,4 @@
-<resources>
+<resources>viewModelFactory
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="general_content_margin_vertical">16dp</dimen>
     <!--Profile screen-->

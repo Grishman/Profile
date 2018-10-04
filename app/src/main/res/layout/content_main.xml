@@ -1,150 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg_image_copy"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".MainActivity"
-    tools:showIn="@layout/activity_main">
+<layout>
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewmodel"
+            type="com.grishman.profiletest.viewmodel.ProfileViewModel" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_image_copy"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context=".MainActivity"
+        tools:showIn="@layout/activity_main">
 
 
-    <TextView
-        android:id="@+id/testText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/testText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hello World!"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.constraint.Guideline
-        android:id="@+id/guidelineTop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="@dimen/profile_top_margin" />
+        <android.support.constraint.Guideline
+            android:id="@+id/guidelineTop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="@dimen/profile_top_margin" />
 
-    <android.support.constraint.Guideline
-        android:id="@+id/guidelineBottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_end="@dimen/profile_top_margin" />
+        <android.support.constraint.Guideline
+            android:id="@+id/guidelineBottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_end="@dimen/profile_top_margin" />
 
-    <android.support.constraint.Guideline
-        android:id="@+id/guidelineLeft"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="@dimen/general_content_margin_vertical" />
+        <android.support.constraint.Guideline
+            android:id="@+id/guidelineLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="@dimen/general_content_margin_vertical" />
 
-    <android.support.constraint.Guideline
-        android:id="@+id/guidelineRight"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_end="@dimen/general_content_margin_vertical" />
+        <android.support.constraint.Guideline
+            android:id="@+id/guidelineRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="@dimen/general_content_margin_vertical" />
 
-    <!--Profile top section-->
-    <ImageView
-        android:id="@+id/profile_image"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:contentDescription="@string/users_picture"
-        android:src="@mipmap/ic_launcher"
-        app:layout_constraintRight_toRightOf="@id/guidelineRight"
-        app:layout_constraintTop_toTopOf="@id/guidelineTop" />
+        <!--Profile top section-->
+        <ImageView
+            android:id="@+id/profile_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:contentDescription="@string/users_picture"
+            android:src="@mipmap/ic_launcher"
+            app:layout_constraintRight_toRightOf="@id/guidelineRight"
+            app:layout_constraintTop_toTopOf="@id/guidelineTop" />
 
-    <TextView
-        android:id="@+id/profile_full_name"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:ellipsize="end"
-        android:gravity="start"
-        android:lines="1"
-        android:textColor="#38465b"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@id/profile_location"
-        app:layout_constraintEnd_toStartOf="@id/profile_image"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@id/guidelineLeft"
-        app:layout_constraintTop_toTopOf="@id/profile_image"
-        app:layout_constraintVertical_chainStyle="packed"
-        tools:text="Maxwell Graham" />
+        <TextView
+            android:id="@+id/profile_full_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:lines="1"
+            android:text="@{viewmodel.fullName}"
+            android:textColor="#38465b"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@id/profile_location"
+            app:layout_constraintEnd_toStartOf="@id/profile_image"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+            app:layout_constraintTop_toTopOf="@id/profile_image"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="Maxwell Graham" />
 
-    <TextView
-        android:id="@+id/profile_location"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:ellipsize="end"
-        android:lines="1"
-        android:textColor="#38465b"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@id/profile_image"
-        app:layout_constraintEnd_toEndOf="@id/profile_full_name"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@id/guidelineLeft"
-        app:layout_constraintTop_toBottomOf="@id/profile_full_name"
-        tools:text="Melbourne, Australia" />
+        <TextView
+            android:id="@+id/profile_location"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="@{viewmodel.location}"
+            android:textColor="#38465b"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@id/profile_image"
+            app:layout_constraintEnd_toEndOf="@id/profile_full_name"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+            app:layout_constraintTop_toBottomOf="@id/profile_full_name"
+            tools:text="Melbourne, Australia" />
 
-    <!--Settings icon-->
-    <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/profile_settings"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        app:layout_constraintLeft_toLeftOf="@id/guidelineLeft"
-        app:layout_constraintTop_toBottomOf="@id/profile_image"
-        app:srcCompat="@drawable/ic_settings" />
+        <!--Settings icon-->
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/profile_settings"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            app:layout_constraintLeft_toLeftOf="@id/guidelineLeft"
+            app:layout_constraintTop_toBottomOf="@id/profile_image"
+            app:srcCompat="@drawable/ic_settings" />
 
-    <!--Info icon-->
-    <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/profile_mobile_info"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="16dp"
-        app:layout_constraintLeft_toRightOf="@id/profile_settings"
-        app:layout_constraintTop_toBottomOf="@id/profile_image"
-        app:srcCompat="@drawable/ic_mobile_info" />
+        <!--Info icon-->
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/profile_mobile_info"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintLeft_toRightOf="@id/profile_settings"
+            app:layout_constraintTop_toBottomOf="@id/profile_image"
+            app:srcCompat="@drawable/ic_mobile_info" />
 
-    <!--<android.support.v7.widget.RecyclerView-->
-    <!--android:id="@+id/cards_recycler"-->
-    <!--app:layout_constraintTop_toBottomOf="@id/profile_settings"-->
-    <!--app:layout_constraintBottom_toTopOf="@id/logo"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="250dp" />-->
+        <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:id="@+id/cards_recycler"-->
+        <!--app:layout_constraintTop_toBottomOf="@id/profile_settings"-->
+        <!--app:layout_constraintBottom_toTopOf="@id/logo"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="250dp" />-->
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/cards_recycler"
-        android:layout_width="0dp"
-        android:background="@color/colorCardsBackground"
-        android:layout_height="320dp"
-        android:layout_gravity="bottom"
-        android:clipToPadding="false"
-        android:overScrollMode="never"
-        android:paddingEnd="@dimen/card_padding"
-        android:paddingLeft="@dimen/card_padding"
-        android:paddingRight="@dimen/card_padding"
-        android:paddingStart="@dimen/card_padding"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/logo"
-        app:layout_constraintTop_toBottomOf="@id/profile_settings" />
-    <!--Logo-->
-    <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/guidelineBottom"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:srcCompat="@drawable/ic_openpay_brandmark" />
-</android.support.constraint.ConstraintLayout>
+        <android.support.v4.view.ViewPager
+            android:id="@+id/cards_recycler"
+            android:layout_width="0dp"
+            android:layout_height="320dp"
+            android:layout_gravity="bottom"
+            android:background="@color/colorCardsBackground"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:paddingEnd="@dimen/card_padding"
+            android:paddingLeft="@dimen/card_padding"
+            android:paddingRight="@dimen/card_padding"
+            android:paddingStart="@dimen/card_padding"
+            app:layout_constraintBottom_toTopOf="@id/logo"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profile_settings" />
+        <!--Logo-->
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/guidelineBottom"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:srcCompat="@drawable/ic_openpay_brandmark" />
+    </android.support.constraint.ConstraintLayout>
+</layout>
