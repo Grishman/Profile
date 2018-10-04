@@ -77,6 +77,7 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = cardAdapter
         //recyclerView.setPageTransformer(false, mCardShadowTransformer)
         recyclerView.currentItem = 1
+        recyclerView.pageMargin=45
         recyclerView.offscreenPageLimit = 3
     }
 
@@ -86,10 +87,14 @@ class MainActivity : AppCompatActivity() {
                 .zipWith(
                         apiService.getProfileInfo(),
                         BiFunction { list: CardsResponse, info: ProfileResponse ->
-                            val resulted = NewType()
-                            resulted.profile = info
-                            resulted.cards = list.cards
-                            return@BiFunction resulted
+                             NewType().apply{
+                                profile = info
+                                cards = list.cards
+                            }
+//                            val resulted = NewType()
+//                            resulted.profile = info
+//                            resulted.cards = list.cards
+//                            return@BiFunction resulted
                         }
                 )
                 .subscribeOn(Schedulers.io())

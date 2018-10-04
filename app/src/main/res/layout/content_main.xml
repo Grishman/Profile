@@ -125,11 +125,11 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/cards_recycler"
         android:layout_width="0dp"
-        android:layout_height="330dp"
+        android:background="@color/colorCardsBackground"
+        android:layout_height="320dp"
         android:layout_gravity="bottom"
         android:clipToPadding="false"
         android:overScrollMode="never"
-        android:paddingBottom="30dp"
         android:paddingEnd="@dimen/card_padding"
         android:paddingLeft="@dimen/card_padding"
         android:paddingRight="@dimen/card_padding"

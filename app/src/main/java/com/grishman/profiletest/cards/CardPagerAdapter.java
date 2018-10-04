@@ -52,18 +52,18 @@ public class CardPagerAdapter extends PagerAdapter {
                 .inflate(R.layout.card_item_layout, container, false);
         container.addView(view);
         //bind(mData.get(position), view);
-        CardView cardView = (CardView) view.findViewById(R.id.cardView);
+//        CardView cardView = (CardView) view.findViewById(R.id.cardView);
         ImageView imageView = (ImageView) view.findViewById(R.id.image);
         Picasso.get()
                 .load(mData.get(position).getImageUrl())
                 .placeholder(R.drawable.ic_mobile_info)
                 .into(imageView);
         if (mBaseElevation == 0) {
-            mBaseElevation = cardView.getCardElevation();
+           // mBaseElevation = cardView.getCardElevation();
         }
 
-        cardView.setMaxCardElevation(mBaseElevation *4);
-        mViews.set(position, cardView);
+//        cardView.setMaxCardElevation(mBaseElevation *4);
+//        mViews.set(position, cardView);
         return view;
     }
 
