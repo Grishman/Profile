@@ -17,6 +17,7 @@ import com.grishman.profiletest.model.CardsResponse
 import com.grishman.profiletest.model.NewType
 import com.grishman.profiletest.model.ProfileResponse
 import com.grishman.profiletest.network.OpenpayService
+import com.grishman.profiletest.utils.CircleTransform
 import com.grishman.profiletest.viewmodel.ProfileViewModel
 import com.grishman.profiletest.viewmodel.ProfileViewModelFactory
 import com.iravul.swipecardview.SwipeCardModel
@@ -103,6 +104,7 @@ class MainActivity : AppCompatActivity() {
         Picasso.get()
                 .load("https://s3-ap-southeast-2.amazonaws.com/openpay-mobile-test/elon.png")
                 .placeholder(R.mipmap.ic_launcher)
+                .transform(CircleTransform())
                 .into(binding.content.profileImage)
     }
 

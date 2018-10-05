@@ -11,11 +11,11 @@ import com.squareup.picasso.Picasso
  */
 object BindingAdapters {
     @JvmStatic
-    @BindingAdapter("bind:imageUrl")
-    fun ImageView.loadImage( imageUrl: String?) {
+    @BindingAdapter("imageUrl")
+    fun loadImage(view: ImageView, imageUrl: String?) {
         Picasso.get()
                 .load(imageUrl)
                 .placeholder(R.mipmap.ic_launcher)
-                .into(this)
+                .into(view)
     }
 }
