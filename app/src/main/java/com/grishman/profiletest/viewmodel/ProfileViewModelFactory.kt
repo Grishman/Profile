@@ -5,7 +5,7 @@ import android.arch.lifecycle.ViewModelProvider
 import com.grishman.profiletest.network.OpenpayService
 
 /**
- * shiit
+ * Factory for oue ViewModel
  */
 class ProfileViewModelFactory(
         private val api: OpenpayService

@@ -1,16 +1,16 @@
 package com.grishman.profiletest
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
+import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import com.grishman.profiletest.R.layout.content_main
-import com.grishman.profiletest.cards.CardItem
+import com.grishman.profiletest.binding.BindingAdapters.loadImage
 import com.grishman.profiletest.cards.CardPagerAdapter
 import com.grishman.profiletest.databinding.ActivityMainBinding
 import com.grishman.profiletest.model.CardsResponse
@@ -19,8 +19,8 @@ import com.grishman.profiletest.model.ProfileResponse
 import com.grishman.profiletest.network.OpenpayService
 import com.grishman.profiletest.viewmodel.ProfileViewModel
 import com.grishman.profiletest.viewmodel.ProfileViewModelFactory
-import com.iravul.swipecardview.SwipeCardAdapter
 import com.iravul.swipecardview.SwipeCardModel
+import com.squareup.picasso.Picasso
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
@@ -55,36 +55,39 @@ class MainActivity : AppCompatActivity() {
             //viewmodel = profileViewModel
             setLifecycleOwner(this@MainActivity)
             //content.viewmodel=profileViewModel
+            content.viewmodel = profileViewModel
         }
-        binding.content.viewmodel = profileViewModel
-        swipeCardModels = ArrayList()
+        //swipeCardModels = ArrayList()
 
-        //dummydata
+        //
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
             //test
             //beginSearch("")
+            //fixme move to onStarts
             profileViewModel.initLoading()
+            profileViewModel.cardsData?.observe(this, Observer { it.let { cardAdapter.swapItems(it)
+            it?.find { it.isDefault==true }.apply { cards_recycler.currentItem=it?.indexOf(this) ?:0 }} })
         }
-        for (i in 0..10) {
-            val swipeCardModel = SwipeCardModel()
-            swipeCardModel.setId("ID-$i")
-            swipeCardModel.setTitle("Product-$i")
-            swipeCardModel.setDescription("ProductDesc-$i")
-            swipeCardModel.setPrice((i * 10).toString() + " Euro")
-            swipeCardModel.setPhotoUrl("https://s-media-cache-ak0.pinimg.com/736x/a3/99/24/a39924a3fcb7266ff7360af8a6ba2e98.jpg")
-            (swipeCardModels as ArrayList<SwipeCardModel>).add(swipeCardModel)
-        }
-
-        val swipeCardAdapter = SwipeCardAdapter(this, swipeCardModels, null)
-        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+//        for (i in 0..10) {
+//            val swipeCardModel = SwipeCardModel()
+//            swipeCardModel.setId("ID-$i")
+//            swipeCardModel.setTitle("Product-$i")
+//            swipeCardModel.setDescription("ProductDesc-$i")
+//            swipeCardModel.setPrice((i * 10).toString() + " Euro")
+//            swipeCardModel.setPhotoUrl("https://s-media-cache-ak0.pinimg.com/736x/a3/99/24/a39924a3fcb7266ff7360af8a6ba2e98.jpg")
+//            (swipeCardModels as ArrayList<SwipeCardModel>).add(swipeCardModel)
+//        }
+//
+//        val swipeCardAdapter = SwipeCardAdapter(this, swipeCardModels, null)
+//        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         val recyclerView = cards_recycler
         cardAdapter = CardPagerAdapter()
-        cardAdapter.addCardItem(CardItem("https://s3-ap-southeast-2.amazonaws.com/openpay-mobile-test/white.png"))
-        cardAdapter.addCardItem(CardItem("https://s3-ap-southeast-2.amazonaws.com/openpay-mobile-test/black.png"))
-        cardAdapter.addCardItem(CardItem("https://s3-ap-southeast-2.amazonaws.com/openpay-mobile-test/white.png"))
-        cardAdapter.addCardItem(CardItem("https://s3-ap-southeast-2.amazonaws.com/openpay-mobile-test/black.png"))
+//        cardAdapter.addCardItem(CardItem("https://s3-ap-southeast-2.amazonaws.com/openpay-mobile-test/white.png"))
+//        cardAdapter.addCardItem(CardItem("https://s3-ap-southeast-2.amazonaws.com/openpay-mobile-test/black.png"))
+//        cardAdapter.addCardItem(CardItem("https://s3-ap-southeast-2.amazonaws.com/openpay-mobile-test/white.png"))
+//        cardAdapter.addCardItem(CardItem("https://s3-ap-southeast-2.amazonaws.com/openpay-mobile-test/black.png"))
 //        mFragmentCardAdapter = CardFragmentPagerAdapter(supportFragmentManager,
 //                dpToPixels(2, this))
 //
@@ -96,6 +99,11 @@ class MainActivity : AppCompatActivity() {
         recyclerView.currentItem = 1
         recyclerView.pageMargin = 45
         recyclerView.offscreenPageLimit = 3
+
+        Picasso.get()
+                .load("https://s3-ap-southeast-2.amazonaws.com/openpay-mobile-test/elon.png")
+                .placeholder(R.mipmap.ic_launcher)
+                .into(binding.content.profileImage)
     }
 
     private fun beginSearch(searchString: String) {
