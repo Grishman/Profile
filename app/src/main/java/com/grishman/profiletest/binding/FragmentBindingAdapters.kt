@@ -14,32 +14,28 @@
  * limitations under the License.
  */
 
-package com.grishman.profiletest.binding
+package com.android.example.github.binding
 
 import android.databinding.BindingAdapter
-import android.view.View
+import android.support.v7.app.AppCompatActivity
 import android.widget.ImageView
 import com.grishman.profiletest.R
 import com.grishman.profiletest.utils.CircleTransform
 import com.squareup.picasso.Picasso
 
 /**
- * Data Binding adapters specific to the app.
+ * Binding adapters that work with a fragment instance.
  */
-object BindingAdapters {
-    @JvmStatic
-    @BindingAdapter("visibleGone")
-    fun showHide(view: View, show: Boolean) {
-        view.visibility = if (show) View.VISIBLE else View.GONE
-    }
-
-    @JvmStatic
+//@OpenForTesting @Inject
+class FragmentBindingAdapters constructor(val fragment: AppCompatActivity) {
     @BindingAdapter("imageUrl")
-    fun loadImage(imageView: ImageView, url: String?) {
-        Picasso.get()
-                .load(url)
-                .transform(CircleTransform())
-                .placeholder(R.mipmap.ic_launcher)
-                .into(imageView)
+    fun bindImage(imageView: ImageView, url: String?) {
+        url.let {
+            Picasso.get()
+                    .load(url)
+                    .transform(CircleTransform())
+                    .placeholder(R.mipmap.ic_launcher)
+                    .into(imageView)
+        }
     }
 }

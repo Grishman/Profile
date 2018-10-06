@@ -3,73 +3,74 @@ package com.grishman.profiletest
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
-import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import com.grishman.profiletest.binding.BindingAdapters.loadImage
 import com.grishman.profiletest.cards.CardPagerAdapter
 import com.grishman.profiletest.databinding.ActivityMainBinding
 import com.grishman.profiletest.model.CardsResponse
-import com.grishman.profiletest.model.NewType
+import com.grishman.profiletest.model.ProfileFullData
 import com.grishman.profiletest.model.ProfileResponse
 import com.grishman.profiletest.network.OpenpayService
-import com.grishman.profiletest.utils.CircleTransform
+import com.grishman.profiletest.network.Outcome
 import com.grishman.profiletest.viewmodel.ProfileViewModel
 import com.grishman.profiletest.viewmodel.ProfileViewModelFactory
-import com.iravul.swipecardview.SwipeCardModel
-import com.squareup.picasso.Picasso
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import java.io.IOException
 
 
 class MainActivity : AppCompatActivity() {
-
+    private val TAG = "ProfileActivity"
     private var disposable: Disposable? = null
 
     private val apiService by lazy {
         OpenpayService.create()
     }
 
-    private var swipeCardModels: List<SwipeCardModel>? = null
-
     private lateinit var cardAdapter: CardPagerAdapter
+
+    private val viewModel: ProfileViewModel by lazy {
+        ViewModelProviders.of(this, ProfileViewModelFactory(apiService)).get(ProfileViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //setContentView(R.layout.activity_main)
-
-
         //fixme replace with DI framework
-        val factory = ProfileViewModelFactory(apiService)
-        val profileViewModel = ViewModelProviders.of(this, factory)
-                .get(ProfileViewModel::class.java)
+//        val factory = ProfileViewModelFactory(apiService)
+//        val profileViewModel = ViewModelProviders.of(this, factory)
+//                .get(ProfileViewModel::class.java)
 
         val binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main).apply {
             //viewmodel = profileViewModel
             setLifecycleOwner(this@MainActivity)
             //content.viewmodel=profileViewModel
-            content.viewmodel = profileViewModel
+            content.viewmodel = viewModel
         }
-        //swipeCardModels = ArrayList()
-
         //
+        initiateDataListener()
+
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
             //test
             //beginSearch("")
             //fixme move to onStarts
-            profileViewModel.initLoading()
-            profileViewModel.cardsData?.observe(this, Observer { it.let { cardAdapter.swapItems(it)
-            it?.find { it.isDefault==true }.apply { cards_recycler.currentItem=it?.indexOf(this) ?:0 }} })
+            viewModel.initLoading()
+//            profileViewModel.cardsData?.observe(this, Observer {
+//                it.let {
+//                    cardAdapter.swapItems(it)
+//                    it?.find { it.isDefault == true }.apply { cards_recycler.currentItem = it?.indexOf(this) ?: 0 }
+//                }
+//            })
         }
 //        for (i in 0..10) {
 //            val swipeCardModel = SwipeCardModel()
@@ -100,12 +101,12 @@ class MainActivity : AppCompatActivity() {
         recyclerView.currentItem = 1
         recyclerView.pageMargin = 45
         recyclerView.offscreenPageLimit = 3
-
-        Picasso.get()
-                .load("https://s3-ap-southeast-2.amazonaws.com/openpay-mobile-test/elon.png")
-                .placeholder(R.mipmap.ic_launcher)
-                .transform(CircleTransform())
-                .into(binding.content.profileImage)
+//
+//        Picasso.get()
+//                .load("https://s3-ap-southeast-2.amazonaws.com/openpay-mobile-test/elon.png")
+//                .placeholder(R.mipmap.ic_launcher)
+//                .transform(CircleTransform())
+//                .into(binding.content.profileImage)
     }
 
     private fun beginSearch(searchString: String) {
@@ -114,11 +115,11 @@ class MainActivity : AppCompatActivity() {
                 .zipWith(
                         apiService.getProfileInfo(),
                         BiFunction { list: CardsResponse, info: ProfileResponse ->
-                            NewType().apply {
+                            ProfileFullData().apply {
                                 profile = info
                                 cards = list.cards
                             }
-//                            val resulted = NewType()
+//                            val resulted = ProfileFullData()
 //                            resulted.profile = info
 //                            resulted.cards = list.cards
 //                            return@BiFunction resulted
@@ -130,13 +131,46 @@ class MainActivity : AppCompatActivity() {
                         { result ->
                             //fixme wtf
                             run {
-                                testText.text = "${result.cards?.size} result found and /\n profile name is ${result.profile?.firstName}"
+                                //testText.text = "${result.cards?.size} result found and /\n profile name is ${result.profile?.firstName}"
                                 profile_full_name.text = "${result.profile?.firstName} ${result.profile?.lastName}"
                                 profile_location.text = result.profile?.location?.city + result.profile?.location?.country
                             }
                         },
                         { error -> Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show() }
                 )
+    }
+
+    private fun initiateDataListener() {
+        //Observe the outcome and update state of the screen  accordingly
+        viewModel.profileOutcome.observe(this, Observer<Outcome<ProfileFullData>> { outcome ->
+            Log.d(TAG, "initiateDataListener: " + outcome.toString())
+            when (outcome) {
+            //loading state
+                is Outcome.Progress -> viewModel.isRefreshing.set(outcome.loading)
+
+                is Outcome.Success -> {
+                    Log.d(TAG, "initiateDataListener: Successfully loaded data")
+                    cardAdapter.swapItems(outcome.data.cards)
+                }
+
+                is Outcome.Failure -> {
+
+                    if (outcome.e is IOException)
+                        Toast.makeText(
+                                this,
+                                "Need interent",
+                                Toast.LENGTH_LONG
+                        ).show()
+                    else
+                        Toast.makeText(
+                                this,
+                                "Try again",
+                                Toast.LENGTH_LONG
+                        ).show()
+                }
+
+            }
+        })
     }
 
     override fun onPause() {
