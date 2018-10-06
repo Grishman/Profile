@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:bind="http://schemas.android.com/apk/res-auto">
+<layout>
 
     <data>
 
@@ -20,7 +20,7 @@
         tools:context=".MainActivity"
         tools:showIn="@layout/activity_main">
 
-
+        <!--Guidelines-->
         <android.support.constraint.Guideline
             android:id="@+id/guidelineTop"
             android:layout_width="wrap_content"
@@ -52,8 +52,8 @@
         <!--Profile top section-->
         <ImageView
             android:id="@+id/profile_image"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="@dimen/profile_logo_size"
+            android:layout_height="@dimen/profile_logo_size"
             android:contentDescription="@string/users_picture"
             android:src="@mipmap/ic_launcher"
             app:imageUrl="@{viewmodel.imageUrl.get()}"
@@ -68,11 +68,11 @@
             android:layout_marginTop="8dp"
             android:ellipsize="end"
             android:gravity="start"
-            android:textStyle="bold"
             android:lines="1"
             android:text="@{viewmodel.fullName}"
-            android:textColor="#38465b"
-            android:textSize="24sp"
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/full_name_size"
+            android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/profile_location"
             app:layout_constraintEnd_toStartOf="@id/profile_image"
             app:layout_constraintHorizontal_bias="0.5"
@@ -90,8 +90,8 @@
             android:ellipsize="end"
             android:lines="1"
             android:text="@{viewmodel.location}"
-            android:textColor="#38465b"
-            android:textSize="18sp"
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/location_size"
             app:layout_constraintBottom_toBottomOf="@id/profile_image"
             app:layout_constraintEnd_toEndOf="@id/profile_full_name"
             app:layout_constraintHorizontal_bias="0.5"
@@ -102,8 +102,8 @@
         <!--Settings icon-->
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/profile_settings"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="@dimen/icons_size"
+            android:layout_height="@dimen/icons_size"
             app:layout_constraintLeft_toLeftOf="@id/guidelineLeft"
             app:layout_constraintTop_toBottomOf="@id/profile_image"
             app:srcCompat="@drawable/ic_settings" />
@@ -111,24 +111,18 @@
         <!--Info icon-->
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/profile_mobile_info"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginStart="32dp"
+            android:layout_width="@dimen/icons_size"
+            android:layout_height="@dimen/icons_size"
+            android:layout_marginStart="@dimen/margin_from_settings_icon"
             app:layout_constraintLeft_toRightOf="@id/profile_settings"
             app:layout_constraintTop_toBottomOf="@id/profile_image"
             app:srcCompat="@drawable/ic_mobile_info" />
 
-        <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:id="@+id/cards_recycler"-->
-        <!--app:layout_constraintTop_toBottomOf="@id/profile_settings"-->
-        <!--app:layout_constraintBottom_toTopOf="@id/logo"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="250dp" />-->
-
+        <!--Cards-->
         <android.support.v4.view.ViewPager
             android:id="@+id/cards_recycler"
             android:layout_width="0dp"
-            android:layout_height="320dp"
+            android:layout_height="@dimen/cards_view_pager_height"
             android:layout_gravity="bottom"
             android:background="@color/colorCardsBackground"
             android:clipToPadding="false"
@@ -142,17 +136,16 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/profile_settings" />
 
+        <!--Loading-->
         <ProgressBar
             android:id="@+id/progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hello World!"
-            android:visibility="visible"
-            app:visibleGone="@{viewmodel.isRefreshing}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:visibleGone="@{viewmodel.isRefreshing}" />
 
         <!--Logo-->
         <android.support.v7.widget.AppCompatImageView

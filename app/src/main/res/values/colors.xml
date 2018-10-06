@@ -6,4 +6,5 @@
 
 
     <color name="colorCardsBackground">#e1e5f3</color>
+    <color name="textColor">#38465b</color>
 </resources>

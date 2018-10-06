@@ -12,7 +12,6 @@ public class ProfileTestApp extends Application {
     public void onCreate() {
         super.onCreate();
         initVectorSupport();
-
     }
 
     private void initVectorSupport() {

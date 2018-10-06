@@ -2,4 +2,5 @@
 <resources>
     <!--Content descriptions-->
     <string name="users_picture" translatable="false">user\'s picture</string>
+    <string name="credit_card_image" translatable="false">user credit card</string>
 </resources>

@@ -4,4 +4,11 @@
     <!--Profile screen-->
     <dimen name="profile_top_margin">20dp</dimen>
     <dimen name="card_padding">60dp</dimen>
+    <dimen name="card_height">220dp</dimen>
+    <dimen name="profile_logo_size">100dp</dimen>
+    <dimen name="full_name_size">24sp</dimen>
+    <dimen name="location_size">18sp</dimen>
+    <dimen name="icons_size">25dp</dimen>
+    <dimen name="margin_from_settings_icon">32dp</dimen>
+    <dimen name="cards_view_pager_height">320dp</dimen>
 </resources>
