@@ -2,13 +2,14 @@ package com.grishman.profiletest
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
+import android.content.Intent
 import android.databinding.DataBindingUtil
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.Toast
 import com.grishman.profiletest.cards.CardPagerAdapter
 import com.grishman.profiletest.databinding.ActivityMainBinding
@@ -17,11 +18,12 @@ import com.grishman.profiletest.network.OpenpayService
 import com.grishman.profiletest.network.Outcome
 import com.grishman.profiletest.viewmodel.ProfileViewModel
 import com.grishman.profiletest.viewmodel.ProfileViewModelFactory
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import java.io.IOException
 
-
+/**
+ * Profile screen
+ */
 class MainActivity : AppCompatActivity() {
     private val TAG = "ProfileActivity"
 
@@ -39,20 +41,44 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        //DataBinding
         val binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main).apply {
             setLifecycleOwner(this@MainActivity)
             content.viewmodel = viewModel
         }
+        //Observe
         initiateDataListener()
-
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-            //fixme move to onStarts
-            viewModel.initLoading()
-        }
+        //UI
         initCardsViewPager()
+        profile_settings.setOnClickListener {
+            //open empty screen
+            startActivity(Intent(this, EmptyActivity::class.java))
+        }
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (isNetworkAvailable()) {
+            viewModel.initLoading()
+        } else {
+            Toast.makeText(
+                    this,
+                    getString(R.string.error_no_internet),
+                    Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+    /**
+     * Check network connection before make API calls.
+     */
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE)
+        return if (connectivityManager is ConnectivityManager) {
+            val networkInfo: NetworkInfo? = connectivityManager.activeNetworkInfo
+            networkInfo?.isConnected ?: false
+        } else false
     }
 
     private fun initCardsViewPager() {
@@ -60,7 +86,7 @@ class MainActivity : AppCompatActivity() {
         cardAdapter = CardPagerAdapter()
         cardsViewPager.adapter = cardAdapter
         cardsViewPager.currentItem = 0
-        cardsViewPager.pageMargin = 45
+        cardsViewPager.pageMargin = 55
         cardsViewPager.offscreenPageLimit = 3
     }
 
@@ -76,7 +102,11 @@ class MainActivity : AppCompatActivity() {
                 is Outcome.Success -> {
                     Log.d(TAG, "initiateDataListener: Successfully loaded data")
                     cardAdapter.swapItems(outcome.data.cards)
-                    //todo find default card and set it via ViewPager.currentItem
+                    //find default card and set it via ViewPager.currentItem
+                    cards_recycler.currentItem = outcome.data.cards?.indexOf(
+                            outcome.data.cards?.first { it.isDefault == true }
+                    ) ?: 0
+                    //it?.find { it.isDefault==true }.apply { cards_recycler.currentItem=it?.indexOf(this) ?:0 }}
                 }
 
                 is Outcome.Failure -> {
@@ -84,34 +114,18 @@ class MainActivity : AppCompatActivity() {
                     if (outcome.e is IOException)
                         Toast.makeText(
                                 this,
-                                "Need internet",
+                                getString(R.string.error_api),
                                 Toast.LENGTH_LONG
                         ).show()
                     else
                         Toast.makeText(
                                 this,
-                                "Try again",
+                                getString(R.string.error_try_again),
                                 Toast.LENGTH_LONG
                         ).show()
                 }
 
             }
         })
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 }

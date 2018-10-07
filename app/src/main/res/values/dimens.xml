@@ -11,4 +11,7 @@
     <dimen name="icons_size">25dp</dimen>
     <dimen name="margin_from_settings_icon">32dp</dimen>
     <dimen name="cards_view_pager_height">320dp</dimen>
+    <dimen name="cards_margin_top">32dp</dimen>
+    <dimen name="cards_margin_botton">64dp</dimen>
+    <dimen name="logo_margin_bottom">32dp</dimen>
 </resources>

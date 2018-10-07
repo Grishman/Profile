@@ -10,6 +10,7 @@
             type="com.grishman.profiletest.viewmodel.ProfileViewModel" />
     </data>
 
+    <!--FIXME Setting big images as background can lead to big troubles, only for simplicity-->
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -122,8 +123,10 @@
         <android.support.v4.view.ViewPager
             android:id="@+id/cards_recycler"
             android:layout_width="0dp"
-            android:layout_height="@dimen/cards_view_pager_height"
+            android:layout_height="0dp"
             android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/cards_margin_botton"
+            android:layout_marginTop="@dimen/cards_margin_top"
             android:background="@color/colorCardsBackground"
             android:clipToPadding="false"
             android:overScrollMode="never"
@@ -131,6 +134,7 @@
             android:paddingLeft="@dimen/card_padding"
             android:paddingRight="@dimen/card_padding"
             android:paddingStart="@dimen/card_padding"
+            android:scrollbars="vertical"
             app:layout_constraintBottom_toTopOf="@id/logo"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -152,6 +156,7 @@
             android:id="@+id/logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/logo_margin_bottom"
             app:layout_constraintBottom_toBottomOf="@id/guidelineBottom"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
